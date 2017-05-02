@@ -25,12 +25,11 @@
     <script src="scripts/d3.v3.js"></script>
   </head>
   <body>
-    <div><H1>Type of transport used across a week </H1></div>
-    <div><H3>Bus, train, ferry and lightrail in Sydney, Australia. 25-31 July 2016 </H1></div>
+    <div><H1>Opal card use use across the week </H1></div>
+    <div><p>Bus, train, ferry and lightrail opal card taps (on and off) in Sydney, Australia. 25-31 July 2016 </p></div>
     <div id="graphtitle"></div>
-    <div id="dataset-picker"></div>
     <div id="chart"></div>
-
+    <div id="dataset-picker"></div>
     </div>
     <script type="text/javascript">
       var margin = { top: 50, right: 0, bottom: 100, left: 30 },
@@ -61,8 +60,20 @@
         .attr("class", "dataset-button")
         .on("click", function(d) {
           heatmapChart(d.data);
+          changetitle(d.lab)
         });
 
+
+      var changetitle = function(ds) {
+        d3.select("H2").remove();
+
+        var ct = d3.select("#graphtitle")
+            .data(ds);
+
+        ct.append("H2")
+          .text(function(d){ return ds + " "})
+          .style("fill");
+      }
 
       var svg = d3.select("#chart").append("svg")
           .attr("width", width + margin.left + margin.right)
@@ -149,7 +160,7 @@
 
         });  
       };
-
+      changetitle(datasetlabels[0]);
       heatmapChart(datasets[0]);
       
 
