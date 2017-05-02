@@ -10,7 +10,7 @@
 
       text.mono {
         font-size: 9pt;
-        font-family: Consolas, courier;
+        font-family: Verdana, Geneva, sans-serif;
         fill: #aaa;
       }
 
@@ -22,14 +22,15 @@
         fill: #000;
       }
     </style>
-    <script src="http://d3js.org/d3.v3.js"></script>
+    <script src="scripts/d3.v3.js"></script>
   </head>
   <body>
     <div><H1>Type of transport used across a week </H1></div>
     <div><H3>Bus, train, ferry and lightrail in Sydney, Australia. 25-31 July 2016 </H1></div>
-    <div><p><i>The ferry is most popular on Sunday afternoon</p></div>
+    <div id="graphtitle"></div>
+    <div id="dataset-picker"></div>
     <div id="chart"></div>
-    <div id="dataset-picker">
+
     </div>
     <script type="text/javascript">
       var margin = { top: 50, right: 0, bottom: 100, left: 30 },
@@ -42,6 +43,26 @@
           days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
           times = ["1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12a", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p", "12p"];
           datasets = ["data/opal_bus.tsv", "data/opal_train.tsv", "data/opal_ferry.tsv", "data/opal_lightrail.tsv"];
+          datasetlabels = ["Bus", "Train", "Ferry", "Lightrail"];
+
+      var dlab = [{"data":"data/opal_bus.tsv","lab":"Bus"},
+          {"data":"data/opal_train.tsv","lab":"Train"},
+          {"data":"data/opal_ferry.tsv","lab":"Ferry"},
+          {"data":"data/opal_lightrail.tsv","lab":"Lightrail"}
+          ];
+
+      var datasetpicker = d3.select("#dataset-picker").selectAll(".dataset-button")
+        .data(dlab);
+
+      datasetpicker.enter()
+        .append("input")
+        .attr("value", function(d){ return d.lab + " Dataset"})
+        .attr("type", "button")
+        .attr("class", "dataset-button")
+        .on("click", function(d) {
+          heatmapChart(d.data);
+        });
+
 
       var svg = d3.select("#chart").append("svg")
           .attr("width", width + margin.left + margin.right)
@@ -131,17 +152,7 @@
 
       heatmapChart(datasets[0]);
       
-      var datasetpicker = d3.select("#dataset-picker").selectAll(".dataset-button")
-        .data(datasets);
 
-      datasetpicker.enter()
-        .append("input")
-        .attr("value", function(d){ return "Dataset " + d })
-        .attr("type", "button")
-        .attr("class", "dataset-button")
-        .on("click", function(d) {
-          heatmapChart(d);
-        });
     </script>
   </body>
 </html>
